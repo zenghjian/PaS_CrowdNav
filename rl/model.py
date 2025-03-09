@@ -12,7 +12,7 @@ class Flatten(nn.Module):
 
 
 class Policy(nn.Module):
-    def __init__(self, action_space, config=None, base=None, base_kwargs=None):
+    def __init__(self, action_space, config=None, base=None, base_kwargs=None, vae_path=None):
         super(Policy, self).__init__()
         self.action_space = action_space
         self.config = config
@@ -20,16 +20,17 @@ class Policy(nn.Module):
             base_kwargs = {}
         self.name = base
 
+        vae_weight_file = vae_path
         if config.robot.policy == 'pas_rnn':
             base=PASRNN
             self.base = base(base_kwargs, config)
 
-            if config.pas.encoder_type == 'vae':
-                if config.sim.train_val_sim == "turtlebot":
-                    vae_weight_file = '/home/zeng/nav2_ws/src/Nav2_PaS_CrowdNav/nav2py_pas_crowdnav_controller/nav2py_pas_crowdnav_controller/PaS_CrowdNav/data/vae.pth'
-                elif config.sim.train_val_sim == "circle_crossing":
-                    vae_weight_file = '/home/zeng/nav2_ws/src/Nav2_PaS_CrowdNav/nav2py_pas_crowdnav_controller/nav2py_pas_crowdnav_controller/PaS_CrowdNav/data/vae.pth'
-                self.base.Label_VAE.load_state_dict(torch.load(vae_weight_file), strict=True)
+            # if config.pas.encoder_type == 'vae':
+            #     if config.sim.train_val_sim == "turtlebot":
+            #         vae_weight_file = '/home/zeng/nav2_ws/src/Nav2_PaS_CrowdNav/nav2py_pas_crowdnav_controller/nav2py_pas_crowdnav_controller/PaS_CrowdNav/data/vae.pth'
+            #     elif config.sim.train_val_sim == "circle_crossing":
+            #         vae_weight_file = '/home/zeng/nav2_ws/src/Nav2_PaS_CrowdNav/nav2py_pas_crowdnav_controller/nav2py_pas_crowdnav_controller/PaS_CrowdNav/data/vae.pth'
+            self.base.Label_VAE.load_state_dict(torch.load(vae_weight_file), strict=True)
         else:
             raise NotImplementedError
 
