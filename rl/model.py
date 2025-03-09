@@ -2,8 +2,8 @@ import torch
 import torch.nn as nn
 import numpy as np
 
-from rl.distributions import Bernoulli, Categorical, DiagGaussian
-from rl.pas_rnn_model import PASRNN
+from .distributions import Bernoulli, Categorical, DiagGaussian
+from .pas_rnn_model import PASRNN
 
 
 class Flatten(nn.Module):
@@ -26,9 +26,9 @@ class Policy(nn.Module):
 
             if config.pas.encoder_type == 'vae':
                 if config.sim.train_val_sim == "turtlebot":
-                    vae_weight_file = 'data/Turtlebot_LabelVAE_CircleFOV30/label_vae_ckpt/label_vae_weight_60.pth'
+                    vae_weight_file = '/home/zeng/nav2_ws/src/Nav2_PaS_CrowdNav/nav2py_pas_crowdnav_controller/nav2py_pas_crowdnav_controller/PaS_CrowdNav/data/vae.pth'
                 elif config.sim.train_val_sim == "circle_crossing":
-                    vae_weight_file = 'data/LabelVAE_CircleFOV30/label_vae_ckpt/label_vae_weight_300.pth'
+                    vae_weight_file = '/home/zeng/nav2_ws/src/Nav2_PaS_CrowdNav/nav2py_pas_crowdnav_controller/nav2py_pas_crowdnav_controller/PaS_CrowdNav/data/vae.pth'
                 self.base.Label_VAE.load_state_dict(torch.load(vae_weight_file), strict=True)
         else:
             raise NotImplementedError
